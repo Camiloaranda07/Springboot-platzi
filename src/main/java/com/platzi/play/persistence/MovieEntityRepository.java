@@ -24,12 +24,15 @@ public class MovieEntityRepository implements MovieRepository {
 
     @Override
     public List<MovieDto> getAll() {
-        return this.movieMapper.toDto(crudMovieEntity.findAll());
+        // Only return movies marked as 'D' (disponible)
+        return this.movieMapper.toDto(this.crudMovieEntity.findAllByEstado("D"));
     }
 
     @Override
     public MovieDto getById(long id) {
         MovieEntity movieEntity = this.crudMovieEntity.findById(id).orElse(null);
+        // If movie not found or not in 'D' (disponible) state, return null (will map to 404 at controller)
+        if (movieEntity == null || !"D".equals(movieEntity.getEstado())) return null;
         return this.movieMapper.toDto(movieEntity);
     }
 
