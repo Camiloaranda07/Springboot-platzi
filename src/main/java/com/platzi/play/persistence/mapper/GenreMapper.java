@@ -26,11 +26,11 @@ public class GenreMapper {
 
         return switch (genre){
             case ACTION -> "ACCION";
-            case COMEDY -> "COMEDY";
+            case COMEDY -> "COMEDIA";
             case DRAMA -> "DRAMA";
-            case ANIMATED -> "ANIMATED";
-            case HORROR -> "HORROR";
-            case SCI_FI -> "SCI_FI";
+            case ANIMATED -> "ANIMADA";
+            case HORROR -> "TERROR";
+            case SCI_FI -> "CIENCIA_FICCION";
         };
     }
 }
