@@ -45,9 +45,8 @@ public class MovieController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<MovieDto> delete(@PathVariable Long id) {
-        MovieDto deleted = this.movieService.delete(id);
-        if (deleted == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(deleted);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        this.movieService.delete(id);
+        return ResponseEntity.ok().build();
     }
 }
