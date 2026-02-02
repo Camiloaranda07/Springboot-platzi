@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface CrudMovieEntity extends CrudRepository<MovieEntity, Long> {
 
+	MovieEntity findFirstByTitulo(String titulo);
 	List<MovieEntity> findAllByEstado(String estado);
 
 }
