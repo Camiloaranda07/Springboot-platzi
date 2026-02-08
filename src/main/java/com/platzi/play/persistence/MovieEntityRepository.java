@@ -3,6 +3,7 @@ package com.platzi.play.persistence;
 import com.platzi.play.domain.dto.MovieDto;
 import com.platzi.play.domain.dto.UpdateMovieDto;
 import com.platzi.play.domain.exception.MovieAlreadyExistsException;
+import com.platzi.play.domain.exception.MovieNotFound;
 import com.platzi.play.domain.repository.MovieRepository;
 import com.platzi.play.persistence.crud.CrudMovieEntity;
 import com.platzi.play.persistence.entity.MovieEntity;
@@ -31,9 +32,8 @@ public class MovieEntityRepository implements MovieRepository {
 
     @Override
     public MovieDto getById(long id) {
-        MovieEntity movieEntity = this.crudMovieEntity.findById(id).orElse(null);
+        MovieEntity movieEntity = this.crudMovieEntity.findById(id).orElseThrow(MovieNotFound::new);
         // If movie not found or not in 'D' (disponible) state, return null (will map to 404 at controller)
-        if (movieEntity == null || !"D".equals(movieEntity.getEstado())) return null;
         return this.movieMapper.toDto(movieEntity);
     }
 
@@ -51,16 +51,27 @@ public class MovieEntityRepository implements MovieRepository {
 
     @Override
     public MovieDto update(long id, UpdateMovieDto updateMovieDto) {
-        MovieEntity movieEntity = this.crudMovieEntity.findById(id).orElse(null);
 
-        if (movieEntity == null) return null;
+        MovieEntity movieEntity = this.crudMovieEntity.findById(id).orElseThrow(MovieNotFound::new);
+        // Acá fue para manejar que no se repitiera el título de la película
+
+        if (!movieEntity.getTitulo().equals(updateMovieDto.title())) {
+            MovieEntity existingMovie = this.crudMovieEntity.findFirstByTitulo(updateMovieDto.title());
+
+            if (existingMovie != null) {
+                throw new MovieAlreadyExistsException(updateMovieDto.title());
+            }
+        }
 
         this.movieMapper.updateEntiyFromDto(updateMovieDto, movieEntity);
+
         return this.movieMapper.toDto(this.crudMovieEntity.save(movieEntity));
     }
 
     @Override
     public void delete(long id) {
-        this.crudMovieEntity.deleteById(id);
+        var movieEntity = crudMovieEntity.findById(id).orElseThrow(MovieNotFound::new);
+
+        this.crudMovieEntity.delete(movieEntity);
     }
 }
