@@ -5,6 +5,7 @@ import com.platzi.play.domain.dto.SuggestRequestDto;
 import com.platzi.play.domain.dto.UpdateMovieDto;
 import com.platzi.play.domain.service.MovieService;
 import com.platzi.play.domain.service.PlatziPlayAiService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,13 +44,13 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<MovieDto> add(@RequestBody MovieDto movieDto) {
+    public ResponseEntity<MovieDto> add(@RequestBody @Valid MovieDto movieDto) {
         MovieDto movieDtoResponse = this.movieService.add(movieDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(movieDtoResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MovieDto> update(@PathVariable Long id, @RequestBody UpdateMovieDto updateMovieDto) {
+    public ResponseEntity<MovieDto> update(@PathVariable Long id, @RequestBody @Valid UpdateMovieDto updateMovieDto) {
         return ResponseEntity.ok(this.movieService.update(id, updateMovieDto));
     }
 
