@@ -67,7 +67,7 @@ public class MovieController {
                     @ApiResponse(responseCode = "200", description = "Pelicula sugerida")
             }
     )
-    public ResponseEntity<String> generateMoviesSuggestion(@Parameter(description = "Intereses del usuario.", example = "accion,comedia") @RequestBody SuggestRequestDto suggestRequestDto) {
+    public ResponseEntity<String> generateMoviesSuggestion(@RequestBody SuggestRequestDto suggestRequestDto) {
         return ResponseEntity.ok(this.aiService.generateMoviesSuggestion(suggestRequestDto.userPreferences()));
     }
 
@@ -81,8 +81,7 @@ public class MovieController {
             }
 
     )
-    public ResponseEntity<MovieDto> add(@Parameter(description = "Pelicula a agregar.", example = "{ title: Marti supreme, duration: 160, genre: ACTION," +
-            "releaseDate: 2026-01-24, rating: 4.8, state: D }") @RequestBody @Valid MovieDto movieDto) {
+    public ResponseEntity<MovieDto> add(@RequestBody @Valid MovieDto movieDto) {
         MovieDto movieDtoResponse = this.movieService.add(movieDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(movieDtoResponse);
     }
@@ -97,8 +96,7 @@ public class MovieController {
             }
 
     )
-    public ResponseEntity<MovieDto> update(@Parameter(description = "Identificador de la pelicula a actualizar.", example = "10" +
-            "{title: Marti supreme, releaseDate: 2015-06-29, rating: 4.8 }") @PathVariable Long id, @RequestBody @Valid UpdateMovieDto updateMovieDto) {
+    public ResponseEntity<MovieDto> update(@Parameter(description = "Identificador de la pelicula a actualizar.", example = "10") @PathVariable Long id, @RequestBody @Valid UpdateMovieDto updateMovieDto) {
         return ResponseEntity.ok(this.movieService.update(id, updateMovieDto));
     }
 
